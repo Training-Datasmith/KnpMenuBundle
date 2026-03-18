@@ -10,7 +10,7 @@ use Symfony\Component\Templating\Helper\Helper as TemplatingHelper;
 
 class MenuHelper extends TemplatingHelper
 {
-    public function __construct(private Helper $helper, private MatcherInterface $matcher, private MenuManipulator $menuManipulator)
+    public function __construct(private readonly Helper $helper, private readonly MatcherInterface $matcher, private readonly MenuManipulator $menuManipulator)
     {
     }
 

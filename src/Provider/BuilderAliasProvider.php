@@ -18,7 +18,7 @@ final class BuilderAliasProvider implements MenuProviderInterface
 {
     private array $builders = [];
 
-    public function __construct(private KernelInterface $kernel, private ContainerInterface $container, private FactoryInterface $menuFactory)
+    public function __construct(private readonly KernelInterface $kernel, private readonly ContainerInterface $container, private readonly FactoryInterface $menuFactory)
     {
     }
 
@@ -39,7 +39,7 @@ final class BuilderAliasProvider implements MenuProviderInterface
             throw new \InvalidArgumentException(\sprintf('Invalid pattern passed to AliasProvider - expected "bundle:class:method", got "%s".', $name));
         }
 
-        list($bundleName, $className, $methodName) = \explode(':', $name);
+        [$bundleName, $className, $methodName] = \explode(':', $name);
 
         $builder = $this->getBuilder($bundleName, $className);
         if (!\method_exists($builder, $methodName)) {
