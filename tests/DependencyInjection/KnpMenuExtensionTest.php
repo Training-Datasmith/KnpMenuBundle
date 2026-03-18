@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\Bundle\MenuBundle\Tests\DependencyInjection;
 
 use Knp\Bundle\MenuBundle\DependencyInjection\KnpMenuExtension;

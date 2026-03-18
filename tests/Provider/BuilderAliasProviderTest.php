@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\Bundle\MenuBundle\Tests\Provider;
 
 use Knp\Bundle\MenuBundle\Provider\BuilderAliasProvider;
