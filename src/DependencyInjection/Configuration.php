@@ -1,47 +1,25 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Knp\Bundle\Menu_Bundle\Dependency_Injection;
 
-namespace Knp\Bundle\MenuBundle\DependencyInjection;
-
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-
+use Symfony\Component\Config\Definition\Builder\Tree_Builder;
+use Symfony\Component\Config\Definition\Configuration_Interface;
 /**
  * This class contains the configuration information for the bundle.
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class Configuration implements ConfigurationInterface
+class Configuration implements Configuration_Interface
 {
     /**
      * Generates the configuration tree.
      */
-    public function getConfigTreeBuilder(): TreeBuilder
+    public function get_config_tree_builder(): Tree_Builder
     {
-        $treeBuilder = new TreeBuilder('knp_menu');
-
-        $rootNode = $treeBuilder->getRootNode();
-
-        $rootNode
-            ->children()
-                ->arrayNode('providers')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('builder_alias')->defaultTrue()->end()
-                    ->end()
-                ->end()
-                ->arrayNode('twig')
-                    ->addDefaultsIfNotSet()
-                    ->canBeUnset()
-                    ->children()
-                        ->scalarNode('template')->defaultValue('@KnpMenu/menu.html.twig')->end()
-                    ->end()
-                ->end()
-                ->booleanNode('templating')->defaultFalse()->end()
-                ->scalarNode('default_renderer')->cannotBeEmpty()->defaultValue('twig')->end()
-            ->end();
-
-        return $treeBuilder;
+        $tree_builder = new Tree_Builder('knp_menu');
+        $root_node = $tree_builder->get_root_node();
+        $root_node->children()->array_node('providers')->add_defaults_if_not_set()->children()->boolean_node('builder_alias')->default_true()->end()->end()->end()->array_node('twig')->add_defaults_if_not_set()->can_be_unset()->children()->scalar_node('template')->default_value('@KnpMenu/menu.html.twig')->end()->end()->end()->boolean_node('templating')->default_false()->end()->scalar_node('default_renderer')->cannot_be_empty()->default_value('twig')->end()->end();
+        return $tree_builder;
     }
 }

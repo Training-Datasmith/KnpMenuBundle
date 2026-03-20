@@ -1,21 +1,18 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Knp\Bundle\Menu_Bundle\Templating\Helper;
 
-namespace Knp\Bundle\MenuBundle\Templating\Helper;
-
-use Knp\Menu\ItemInterface;
-use Knp\Menu\Matcher\MatcherInterface;
+use Knp\Menu\Item_Interface;
+use Knp\Menu\Matcher\Matcher_Interface;
 use Knp\Menu\Twig\Helper;
-use Knp\Menu\Util\MenuManipulator;
+use Knp\Menu\Util\Menu_Manipulator;
 use Symfony\Component\Templating\Helper\Helper as TemplatingHelper;
-
-class MenuHelper extends TemplatingHelper
+class Menu_Helper extends Templating_Helper
 {
-    public function __construct(private readonly Helper $helper, private readonly MatcherInterface $matcher, private readonly MenuManipulator $menuManipulator)
+    public function __construct(private readonly Helper $helper, private readonly Matcher_Interface $matcher, private readonly Menu_Manipulator $menu_manipulator)
     {
     }
-
     /**
      * Retrieves an item following a path in the tree.
      *
@@ -27,7 +24,6 @@ class MenuHelper extends TemplatingHelper
     {
         return $this->helper->get($menu, $path, $options);
     }
-
     /**
      * Renders a menu with the specified renderer.
      *
@@ -40,7 +36,6 @@ class MenuHelper extends TemplatingHelper
     {
         return $this->helper->render($menu, $options, $renderer);
     }
-
     /**
      * Returns an array ready to be used for breadcrumbs.
      *
@@ -49,11 +44,10 @@ class MenuHelper extends TemplatingHelper
      *
      * @return array
      */
-    public function getBreadcrumbsArray($menu, $subItem = null)
+    public function get_breadcrumbs_array($menu, $sub_item = null)
     {
-        return $this->helper->getBreadcrumbsArray($menu, $subItem);
+        return $this->helper->get_breadcrumbs_array($menu, $sub_item);
     }
-
     /**
      * A string representation of this menu item.
      *
@@ -63,21 +57,19 @@ class MenuHelper extends TemplatingHelper
      *
      * @return string
      */
-    public function getPathAsString(ItemInterface $menu, $separator = ' > ')
+    public function get_path_as_string(Item_Interface $menu, $separator = ' > ')
     {
-        return $this->menuManipulator->getPathAsString($menu, $separator);
+        return $this->menu_manipulator->get_path_as_string($menu, $separator);
     }
-
     /**
      * Checks whether an item is current.
      *
      * @return bool
      */
-    public function isCurrent(ItemInterface $item)
+    public function is_current(Item_Interface $item)
     {
-        return $this->matcher->isCurrent($item);
+        return $this->matcher->is_current($item);
     }
-
     /**
      * Checks whether an item is the ancestor of a current item.
      *
@@ -85,11 +77,10 @@ class MenuHelper extends TemplatingHelper
      *
      * @return bool
      */
-    public function isAncestor(ItemInterface $item, $depth = null)
+    public function is_ancestor(Item_Interface $item, $depth = null)
     {
-        return $this->matcher->isAncestor($item, $depth);
+        return $this->matcher->is_ancestor($item, $depth);
     }
-
     /**
      * Returns the current item of a menu.
      *
@@ -97,15 +88,14 @@ class MenuHelper extends TemplatingHelper
      *
      * @return ItemInterface|null
      */
-    public function getCurrentItem($menu)
+    public function get_current_item($menu)
     {
-        return $this->helper->getCurrentItem($menu);
+        return $this->helper->get_current_item($menu);
     }
-
     /**
      * @return string
      */
-    public function getName()
+    public function get_name()
     {
         return 'knp_menu';
     }

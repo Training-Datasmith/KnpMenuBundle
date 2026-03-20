@@ -1,78 +1,61 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Knp\Bundle\Menu_Bundle\Dependency_Injection;
 
-namespace Knp\Bundle\MenuBundle\DependencyInjection;
-
-use Knp\Menu\Attribute\AsMenuBuilder;
-use Knp\Menu\Factory\ExtensionInterface;
-use Knp\Menu\ItemInterface;
-use Knp\Menu\Matcher\Voter\VoterInterface;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ChildDefinition;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-
-class KnpMenuExtension extends Extension implements PrependExtensionInterface
+use Knp\Menu\Attribute\As_Menu_Builder;
+use Knp\Menu\Factory\Extension_Interface;
+use Knp\Menu\Item_Interface;
+use Knp\Menu\Matcher\Voter\Voter_Interface;
+use Symfony\Component\Config\File_Locator;
+use Symfony\Component\Dependency_Injection\Child_Definition;
+use Symfony\Component\Dependency_Injection\Container_Builder;
+use Symfony\Component\Dependency_Injection\Extension\Extension;
+use Symfony\Component\Dependency_Injection\Extension\Prepend_Extension_Interface;
+use Symfony\Component\Dependency_Injection\Loader\Php_File_Loader;
+class Knp_Menu_Extension extends Extension implements Prepend_Extension_Interface
 {
-    public function load(array $configs, ContainerBuilder $container): void
+    public function load(array $configs, Container_Builder $container): void
     {
-        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
+        $loader = new Php_File_Loader($container, new File_Locator(__DIR__ . '/../../config'));
         $loader->load('menu.php');
-
         $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
+        $config = $this->process_configuration($configuration, $configs);
         foreach ($config['providers'] as $builder => $enabled) {
             if ($enabled) {
-                $container->getDefinition(\sprintf('knp_menu.menu_provider.%s', $builder))->addTag('knp_menu.provider');
+                $container->get_definition(\sprintf('knp_menu.menu_provider.%s', $builder))->add_tag('knp_menu.provider');
             }
         }
-
         if (isset($config['twig'])) {
             $loader->load('twig.php');
-            $container->setParameter('knp_menu.renderer.twig.template', $config['twig']['template']);
+            $container->set_parameter('knp_menu.renderer.twig.template', $config['twig']['template']);
         }
         if ($config['templating']) {
             trigger_deprecation('knplabs/knp-menu-bundle', '3.3', 'Using the templating component is deprecated since version 3.3, this option will be removed in version 4.');
             $loader->load('templating.php');
         }
-
-        $container->setParameter('knp_menu.default_renderer', $config['default_renderer']);
-
-        $container->registerForAutoconfiguration(VoterInterface::class)
-            ->addTag('knp_menu.voter');
-        $container->registerForAutoconfiguration(ExtensionInterface::class)
-            ->addTag('knp_menu.factory_extension');
-        $container->registerAttributeForAutoconfiguration(AsMenuBuilder::class, static function (ChildDefinition $definition, AsMenuBuilder $attribute, \ReflectionMethod $reflectionMethod): void {
-            $definition->addTag('knp_menu.menu_builder', [
-                'alias' => $attribute->name,
-                'method' => $reflectionMethod->getName(),
-            ]);
+        $container->set_parameter('knp_menu.default_renderer', $config['default_renderer']);
+        $container->register_for_autoconfiguration(Voter_Interface::class)->add_tag('knp_menu.voter');
+        $container->register_for_autoconfiguration(Extension_Interface::class)->add_tag('knp_menu.factory_extension');
+        $container->register_attribute_for_autoconfiguration(As_Menu_Builder::class, static function (Child_Definition $definition, As_Menu_Builder $attribute, \ReflectionMethod $reflection_method): void {
+            $definition->add_tag('knp_menu.menu_builder', ['alias' => $attribute->name, 'method' => $reflection_method->get_name()]);
         });
     }
-
-    public function getNamespace(): string
+    public function get_namespace(): string
     {
         return 'http://knplabs.com/schema/dic/menu';
     }
-
-    public function getXsdValidationBasePath(): string
+    public function get_xsd_validation_base_path(): string
     {
-        return __DIR__.'/../Resources/config/schema';
+        return __DIR__ . '/../Resources/config/schema';
     }
-
-    public function prepend(ContainerBuilder $container): void
+    public function prepend(Container_Builder $container): void
     {
-        if (!$container->hasExtension('twig')) {
+        if (!$container->has_extension('twig')) {
             return;
         }
-
-        $refl = new \ReflectionClass(ItemInterface::class);
-        $path = \dirname($refl->getFileName()).'/Resources/views';
-
-        $container->prependExtensionConfig('twig', ['paths' => [$path]]);
+        $refl = new \ReflectionClass(Item_Interface::class);
+        $path = \dirname($refl->get_file_name()) . '/Resources/views';
+        $container->prepend_extension_config('twig', ['paths' => [$path]]);
     }
 }

@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Knp\Bundle\Menu_Bundle\Dependency_Injection\Compiler;
 
-namespace Knp\Bundle\MenuBundle\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
-
+use Symfony\Component\Dependency_Injection\Argument\Service_Closure_Argument;
+use Symfony\Component\Dependency_Injection\Compiler\Compiler_Pass_Interface;
+use Symfony\Component\Dependency_Injection\Container_Builder;
+use Symfony\Component\Dependency_Injection\Reference;
 /**
  * This compiler pass registers the menu builders in the LazyProvider.
  *
@@ -16,16 +14,15 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @internal
  */
-final class RegisterMenusPass implements CompilerPassInterface
+final class Register_Menus_Pass implements Compiler_Pass_Interface
 {
-    public function process(ContainerBuilder $container): void
+    public function process(Container_Builder $container): void
     {
-        if (!$container->hasDefinition('knp_menu.menu_provider.lazy')) {
+        if (!$container->has_definition('knp_menu.menu_provider.lazy')) {
             return;
         }
-
-        $menuBuilders = [];
-        foreach ($container->findTaggedServiceIds('knp_menu.menu_builder', true) as $id => $tags) {
+        $menu_builders = [];
+        foreach ($container->find_tagged_service_ids('knp_menu.menu_builder', true) as $id => $tags) {
             foreach ($tags as $attributes) {
                 if (empty($attributes['alias'])) {
                     throw new \InvalidArgumentException(\sprintf('The alias is not defined in the "knp_menu.menu_builder" tag for the service "%s"', $id));
@@ -33,19 +30,17 @@ final class RegisterMenusPass implements CompilerPassInterface
                 if (empty($attributes['method'])) {
                     throw new \InvalidArgumentException(\sprintf('The method is not defined in the "knp_menu.menu_builder" tag for the service "%s"', $id));
                 }
-                $menuBuilders[$attributes['alias']] = [new ServiceClosureArgument(new Reference($id)), $attributes['method']];
+                $menu_builders[$attributes['alias']] = [new Service_Closure_Argument(new Reference($id)), $attributes['method']];
             }
         }
-
-        foreach ($container->findTaggedServiceIds('knp_menu.menu', true) as $id => $tags) {
+        foreach ($container->find_tagged_service_ids('knp_menu.menu', true) as $id => $tags) {
             foreach ($tags as $attributes) {
                 if (empty($attributes['alias'])) {
                     throw new \InvalidArgumentException(\sprintf('The alias is not defined in the "knp_menu.menu" tag for the service "%s"', $id));
                 }
-                $menuBuilders[$attributes['alias']] = new ServiceClosureArgument(new Reference($id));
+                $menu_builders[$attributes['alias']] = new Service_Closure_Argument(new Reference($id));
             }
         }
-
-        $container->getDefinition('knp_menu.menu_provider.lazy')->replaceArgument(0, $menuBuilders);
+        $container->get_definition('knp_menu.menu_provider.lazy')->replace_argument(0, $menu_builders);
     }
 }

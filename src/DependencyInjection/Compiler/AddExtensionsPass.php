@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Knp\Bundle\Menu_Bundle\Dependency_Injection\Compiler;
 
-namespace Knp\Bundle\MenuBundle\DependencyInjection\Compiler;
-
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
-
+use Symfony\Component\Config\Definition\Exception\Invalid_Configuration_Exception;
+use Symfony\Component\Dependency_Injection\Compiler\Compiler_Pass_Interface;
+use Symfony\Component\Dependency_Injection\Container_Builder;
+use Symfony\Component\Dependency_Injection\Reference;
 /**
  * This compiler pass registers the renderers in the RendererProvider.
  *
@@ -16,30 +14,26 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @internal
  */
-final class AddExtensionsPass implements CompilerPassInterface
+final class Add_Extensions_Pass implements Compiler_Pass_Interface
 {
-    public function process(ContainerBuilder $container): void
+    public function process(Container_Builder $container): void
     {
         if (!$container->has('knp_menu.factory')) {
             return;
         }
-
-        $taggedServiceIds = $container->findTaggedServiceIds('knp_menu.factory_extension');
-        if (0 === \count($taggedServiceIds)) {
+        $tagged_service_ids = $container->find_tagged_service_ids('knp_menu.factory_extension');
+        if (0 === \count($tagged_service_ids)) {
             return;
         }
-
-        $definition = $container->findDefinition('knp_menu.factory');
-
-        if (!\method_exists($container->getParameterBag()->resolveValue($definition->getClass()), 'addExtension')) {
+        $definition = $container->find_definition('knp_menu.factory');
+        if (!\method_exists($container->get_parameter_bag()->resolve_value($definition->get_class()), 'addExtension')) {
             $msg = 'To use factory extensions, the service of class "%s" registered as knp_menu.factory must implement the "addExtension" method';
-            throw new InvalidConfigurationException(\sprintf($msg, $definition->getClass()));
+            throw new Invalid_Configuration_Exception(\sprintf($msg, $definition->get_class()));
         }
-
-        foreach ($taggedServiceIds as $id => $tags) {
+        foreach ($tagged_service_ids as $id => $tags) {
             foreach ($tags as $tag) {
                 $priority = $tag['priority'] ?? 0;
-                $definition->addMethodCall('addExtension', [new Reference($id), $priority]);
+                $definition->add_method_call('addExtension', [new Reference($id), $priority]);
             }
         }
     }

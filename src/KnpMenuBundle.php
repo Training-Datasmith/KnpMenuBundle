@@ -1,27 +1,23 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Knp\Bundle\Menu_Bundle;
 
-namespace Knp\Bundle\MenuBundle;
-
-use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\AddExtensionsPass;
-use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\AddProvidersPass;
-use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\RegisterMenusPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-
-final class KnpMenuBundle extends Bundle
+use Knp\Bundle\Menu_Bundle\Dependency_Injection\Compiler\Add_Extensions_Pass;
+use Knp\Bundle\Menu_Bundle\Dependency_Injection\Compiler\Add_Providers_Pass;
+use Knp\Bundle\Menu_Bundle\Dependency_Injection\Compiler\Register_Menus_Pass;
+use Symfony\Component\Dependency_Injection\Container_Builder;
+use Symfony\Component\Http_Kernel\Bundle\Bundle;
+final class Knp_Menu_Bundle extends Bundle
 {
-    public function build(ContainerBuilder $container): void
+    public function build(Container_Builder $container): void
     {
         parent::build($container);
-
-        $container->addCompilerPass(new RegisterMenusPass());
-        $container->addCompilerPass(new AddExtensionsPass());
-        $container->addCompilerPass(new AddProvidersPass());
+        $container->add_compiler_pass(new Register_Menus_Pass());
+        $container->add_compiler_pass(new Add_Extensions_Pass());
+        $container->add_compiler_pass(new Add_Providers_Pass());
     }
-
-    public function getPath(): string
+    public function get_path(): string
     {
         return \dirname(__DIR__);
     }
