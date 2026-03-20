@@ -1,7 +1,9 @@
 {
     "name": "knplabs/knp-menu-bundle",
     "description": "This bundle provides an integration of the KnpMenu library",
-    "keywords": ["menu"],
+    "keywords": [
+        "menu"
+    ],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -33,10 +35,14 @@
         "symfony/templating": "^6.4 | ^7.0 | ^8.0"
     },
     "autoload": {
-        "psr-4": { "Knp\\Bundle\\MenuBundle\\": "src" }
+        "psr-4": {
+            "Knp\\Bundle\\Menu_Bundle\\": "src"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "Knp\\Bundle\\MenuBundle\\Tests\\": "tests" }
+        "psr-4": {
+            "Knp\\Bundle\\Menu_Bundle\\Tests\\": "tests"
+        }
     },
     "extra": {
         "branch-alias": {
